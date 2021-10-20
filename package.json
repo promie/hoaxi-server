@@ -5,6 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "start": "tsnd --cls src/index.ts",
+    "client": "cd client && npx http-server -c-1 -p 8080 -P http://localhost:3000",
     "dev": "tsnd --cls src/index.ts",
     "build": "tsc",
     "formatting": "prettier --check src",

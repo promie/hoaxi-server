@@ -106,3 +106,4 @@ dist
 # Misc
 .idea/
 .DS_Store
+client/
