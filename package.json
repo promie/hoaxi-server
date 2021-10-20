@@ -9,7 +9,8 @@
     "build": "tsc",
     "formatting": "prettier --check src",
     "lint": "eslint src",
-    "test": "jest --verbose -c jest.config.js"
+    "test": "jest --verbose -c jest.config.js",
+    "test:watch": "jest --watch --verbose -c jest.config.js"
   },
   "repository": {
     "type": "git",
