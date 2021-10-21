@@ -1,5 +1,5 @@
 export default {
-  roots: ['<rootDir>'],
+  roots: ['<rootDir>/src'],
   testMatch: ['**/?(*.)+(int.test).+(ts)'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
