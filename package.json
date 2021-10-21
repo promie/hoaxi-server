@@ -4,9 +4,9 @@
   "description": "Hoaxify Server",
   "main": "app.ts",
   "scripts": {
-    "start": "tsnd --cls index.ts",
+    "start": "tsnd --cls src/index.ts",
     "client": "cd client && npx http-server -c-1 -p 8080 -P http://localhost:3000",
-    "dev": "tsnd --cls index.ts",
+    "dev": "tsnd --cls src/index.ts",
     "build": "tsc",
     "formatting": "prettier --check src",
     "lint": "eslint src",
