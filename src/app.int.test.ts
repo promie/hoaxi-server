@@ -62,5 +62,19 @@ describe('Integration Tests', () => {
       // @ts-ignore
       expect(savedUser.email).toBe('user1@mail.com')
     })
+
+    it('hashes the password in the database', async () => {
+      await request(app).post('/api/1.0/users').send({
+        username: 'user1',
+        email: 'user1@mail.com',
+        password: 'P4ssword',
+      })
+
+      const userList = await User.findAll()
+      const savedUser = userList[0]
+
+      // @ts-ignore
+      expect(savedUser.password).not.toBe('P4ssword')
+    })
   })
 })
