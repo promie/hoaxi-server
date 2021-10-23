@@ -4,16 +4,16 @@
   "description": "Hoaxify Server",
   "main": "app.ts",
   "scripts": {
-    "start": "tsnd --cls src/index.ts",
+    "start": "cross-env NODE_ENV=development tsnd --cls src/index.ts",
     "client": "cd client && npx http-server -c-1 -p 8080 -P http://localhost:3000",
-    "dev": "tsnd --cls src/index.ts",
+    "dev": "cross-env NODE_ENV=development tsnd --cls src/index.ts",
     "build": "tsc",
     "formatting": "prettier --check src",
     "lint": "eslint src",
-    "test": "jest --verbose -c jest.config.js",
-    "test:watch": "jest --watch --verbose -c jest.config.js",
-    "test:unit": "jest --verbose -c jest.config.unit.js",
-    "test:integration": "jest --verbose -c jest.config.int.js"
+    "test": "cross-env NODE_ENV=test jest --verbose -c jest.config.js",
+    "test:watch": "cross-env NODE_ENV=test jest --watch --verbose -c jest.config.js",
+    "test:unit": "cross-env NODE_ENV=test jest --verbose -c jest.config.unit.js",
+    "test:integration": "cross-env NODE_ENV=test jest --verbose -c jest.config.int.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/config": "0.0.39",
     "@types/jest": "^27.0.2",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
