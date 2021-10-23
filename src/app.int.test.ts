@@ -4,7 +4,6 @@ import { User } from './models'
 import sequelize from './config/database'
 
 beforeAll(() => {
-  // Initalising database
   return sequelize.sync()
 })
 
