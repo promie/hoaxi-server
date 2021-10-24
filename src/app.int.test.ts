@@ -62,5 +62,15 @@ describe('Integration Tests', () => {
       // @ts-ignore
       expect(savedUser.password).not.toBe('P4ssword')
     })
+
+    it('returns 400 when username is null', async () => {
+      const response = await request(app).post('/api/1.0/users').send({
+        username: null,
+        email: 'user1@mail.com',
+        password: 'P4ssword',
+      })
+
+      expect(response.status).toBe(400)
+    })
   })
 })
