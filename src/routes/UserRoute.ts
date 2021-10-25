@@ -4,6 +4,11 @@ import { signUpValidation } from '../middleware'
 
 const router = express.Router()
 
-router.post('/', signUpValidation, UserController.signUp)
+router.post(
+  '/',
+  signUpValidation.validateUsername,
+  signUpValidation.validateEmail,
+  UserController.signUp,
+)
 
 export default router

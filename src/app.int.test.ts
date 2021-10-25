@@ -114,7 +114,7 @@ describe('Integration Tests', () => {
 
       const body = response.body
 
-      expect(body.validationErrors.username).toBe('E-mail cannot be null')
+      expect(body.validationErrors.email).toBe('E-mail cannot be null')
     })
   })
 })
