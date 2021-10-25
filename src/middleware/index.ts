@@ -1,3 +1,4 @@
 import morganMiddleware from './morganMiddleware'
+import signUpValidation from './signUpValidation'
 
-export { morganMiddleware }
+export { morganMiddleware, signUpValidation }
