@@ -9,6 +9,7 @@ router.post(
   '/',
   check('username').notEmpty().withMessage('Username cannot be null'),
   check('email').notEmpty().withMessage('E-mail cannot be null'),
+  check('password').notEmpty().withMessage('Password cannot be null'),
   signUpValidationMiddleware,
   UserController.signUp,
 )
