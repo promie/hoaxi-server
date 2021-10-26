@@ -1,13 +1,15 @@
 import express from 'express'
 import { UserController } from '../controllers'
-import { signUpValidation } from '../middleware'
+import { signUpValidationMiddleware } from '../middleware'
+import { check } from 'express-validator'
 
 const router = express.Router()
 
 router.post(
   '/',
-  signUpValidation.validateUsername,
-  signUpValidation.validateEmail,
+  check('username').notEmpty().withMessage('Username cannot be null'),
+  check('email').notEmpty().withMessage('E-mail cannot be null'),
+  signUpValidationMiddleware,
   UserController.signUp,
 )
 
