@@ -105,22 +105,26 @@ describe('Integration Tests', () => {
       expect(Object.keys(body.validationErrors)).toEqual(['username', 'email'])
     })
 
-    it.each([
-      ['username', 'Username cannot be null'],
-      ['email', 'E-mail cannot be null'],
-      ['password', 'Password cannot be null'],
-    ])('when %s is null %s is received', async (field, expectedMessage) => {
-      const user = {
-        username: 'user1',
-        email: 'user1@mail.com',
-        password: 'P4ssword',
-      }
+    it.each`
+      field         | expectedMessage
+      ${'username'} | ${'Username cannot be null'}
+      ${'email'}    | ${'E-mail cannot be null'}
+      ${'password'} | ${'Password cannot be null'}
+    `(
+      'returns $expectedMessage when $field is null',
+      async ({ field, expectedMessage }) => {
+        const user = {
+          username: 'user1',
+          email: 'user1@mail.com',
+          password: 'P4ssword',
+        }
 
-      // @ts-ignore
-      user[field] = null
-      const response = await postUser(user)
-      const body = response.body
-      expect(body.validationErrors[field]).toBe(expectedMessage)
-    })
+        // @ts-ignore
+        user[field] = null
+        const response = await postUser(user)
+        const body = response.body
+        expect(body.validationErrors[field]).toBe(expectedMessage)
+      },
+    )
   })
 })
