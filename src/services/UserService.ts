@@ -13,6 +13,11 @@ const signUp = async (userDetails: IUser) => {
   return UserRepository.signUp(user)
 }
 
+const findByEmail = (email: string) => {
+  return UserRepository.findByEmail(email)
+}
+
 export default {
   signUp,
+  findByEmail,
 }

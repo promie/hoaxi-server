@@ -1,6 +1,6 @@
 import express from 'express'
 import { UserController } from '../controllers'
-import { User } from '../models'
+import { UserService } from '../services'
 import { signUpValidationMiddleware } from '../middleware'
 import { check } from 'express-validator'
 
@@ -22,7 +22,7 @@ router.post(
     .withMessage('E-mail is not valid')
     .bail()
     .custom(async email => {
-      const user = await User.findOne({ where: { email: email } })
+      const user = await UserService.findByEmail(email)
 
       if (user) {
         throw new Error('E-mail in use')
