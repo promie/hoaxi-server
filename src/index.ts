@@ -5,7 +5,7 @@ import { Logger } from './utils'
 
 const PORT = process.env.PORT || 3000
 
-sequelize.sync()
+sequelize.sync({ force: true })
 
 const startServer = async (): Promise<http.Server> => {
   return app.listen(PORT, () => {
