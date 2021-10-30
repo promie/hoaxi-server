@@ -113,7 +113,7 @@ describe('Integration Tests', () => {
     const passwordSize = 'Password must be at least 6 characters'
     const password_pattern =
       'Password must have at least 1 uppercase, 1 lowercase letter and 1 number'
-    const email_inuse = 'E-mail in use'
+    const emailInUse = 'E-mail in use'
 
     it.each`
       field         | value              | expectedMessage
@@ -149,12 +149,12 @@ describe('Integration Tests', () => {
       },
     )
 
-    it('returns E-mail in use when same email is already in use', async () => {
+    it(`returns ${emailInUse} when same email is already in use`, async () => {
       await User.create({ ...validUser })
 
       const response = await postUser()
 
-      expect(response.body.validationErrors.email).toBe(email_inuse)
+      expect(response.body.validationErrors.email).toBe(emailInUse)
     })
 
     it('returns errors for both username is null and email is in use', async () => {
@@ -169,6 +169,60 @@ describe('Integration Tests', () => {
       const body = response.body
 
       expect(Object.keys(body.validationErrors)).toEqual(['username', 'email'])
+    })
+  })
+
+  describe('Internationalisation', () => {
+    const usernameNull = 'กรุณาใส่ Username'
+    const usernameSize = 'Username ต้องมีอย่างต่ำ 4 และมากสุด 32 ตัว'
+    const emailNull = 'กรุณาใส่อีเมล'
+    const emailInvalid = 'อีเมลไม่ถูกต้อง'
+    const passwordNull = 'กรุณาใส่ Password'
+    const passwordSize = 'Password ต้องมีอย่างต่ำ 6 ตัว'
+    const password_pattern =
+      'Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข'
+    const emailInUse = 'อีเอลนี้ถูกใช้แล้ว'
+
+    it.each`
+      field         | value              | expectedMessage
+      ${'username'} | ${null}            | ${usernameNull}
+      ${'username'} | ${'usr'}           | ${usernameSize}
+      ${'username'} | ${'a'.repeat(33)}  | ${usernameSize}
+      ${'email'}    | ${null}            | ${emailNull}
+      ${'email'}    | ${'mail.com'}      | ${emailInvalid}
+      ${'email'}    | ${'user.mail.com'} | ${emailInvalid}
+      ${'email'}    | ${'user@mail'}     | ${emailInvalid}
+      ${'password'} | ${null}            | ${passwordNull}
+      ${'password'} | ${'P4ssw'}         | ${passwordSize}
+      ${'password'} | ${'alllowercase'}  | ${password_pattern}
+      ${'password'} | ${'ALLUPPERCASE'}  | ${password_pattern}
+      ${'password'} | ${'123456789'}     | ${password_pattern}
+      ${'password'} | ${'lowerUPPER'}    | ${password_pattern}
+      ${'password'} | ${'lower123456'}   | ${password_pattern}
+      ${'password'} | ${'UPPER123456'}   | ${password_pattern}
+    `(
+      'returns $expectedMessage when $field is $value',
+      async ({ field, expectedMessage, value }) => {
+        const user = {
+          username: 'user1',
+          email: 'user1@mail.com',
+          password: 'P4ssword',
+        }
+
+        // @ts-ignore
+        user[field] = value
+        const response = await postUser(user)
+        const body = response.body
+        expect(body.validationErrors[field]).toBe(expectedMessage)
+      },
+    )
+
+    it(`returns ${emailInUse} when same email is already in use`, async () => {
+      await User.create({ ...validUser })
+
+      const response = await postUser()
+
+      expect(response.body.validationErrors.email).toBe(emailInUse)
     })
   })
 })
