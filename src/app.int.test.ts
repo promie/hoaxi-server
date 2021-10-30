@@ -173,6 +173,13 @@ describe('Integration Tests', () => {
   })
 
   describe('Internationalisation', () => {
+    const postUser = (user: UserType = validUser) => {
+      return request(app)
+        .post('/api/1.0/users')
+        .set('Accept-Language', 'th')
+        .send(user)
+    }
+
     const usernameNull = 'กรุณาใส่ Username'
     const usernameSize = 'Username ต้องมีอย่างต่ำ 4 และมากสุด 32 ตัว'
     const emailNull = 'กรุณาใส่อีเมล'
@@ -201,7 +208,7 @@ describe('Integration Tests', () => {
       ${'password'} | ${'lower123456'}   | ${password_pattern}
       ${'password'} | ${'UPPER123456'}   | ${password_pattern}
     `(
-      'returns $expectedMessage when $field is $value',
+      'returns $expectedMessage when $field is $value when language is set as Thai',
       async ({ field, expectedMessage, value }) => {
         const user = {
           username: 'user1',
@@ -217,7 +224,7 @@ describe('Integration Tests', () => {
       },
     )
 
-    it(`returns ${emailInUse} when same email is already in use`, async () => {
+    it(`returns ${emailInUse} when same email is already in use when language is set as Thai`, async () => {
       await User.create({ ...validUser })
 
       const response = await postUser()

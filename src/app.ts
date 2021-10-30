@@ -1,11 +1,31 @@
 import express, { Application, Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import httpStatus from 'http-status'
+import i18next from 'i18next'
+import Backend from 'i18next-fs-backend'
+import middleware from 'i18next-http-middleware'
 import { morganMiddleware } from './middleware'
 import { UserRoute } from './routes'
 
+i18next
+  .use(Backend)
+  .use(middleware.LanguageDetector)
+  .init({
+    fallbackLng: 'en',
+    lng: 'en',
+    ns: ['translation'],
+    defaultNS: 'translation',
+    backend: {
+      loadPath: './locales/{{lng}}/{{ns}}.json',
+    },
+    detection: {
+      lookupHeader: 'accept-language',
+    },
+  })
+
 const app: Application = express()
 
+app.use(middleware.handle(i18next))
 app.use(express.json())
 app.use(cors())
 app.use(morganMiddleware)
