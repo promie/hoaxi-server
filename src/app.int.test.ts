@@ -111,7 +111,7 @@ describe('Integration Tests', () => {
     const emailInvalid = 'E-mail is not valid'
     const passwordNull = 'Password cannot be null'
     const passwordSize = 'Password must be at least 6 characters'
-    const password_pattern =
+    const passwordPattern =
       'Password must have at least 1 uppercase, 1 lowercase letter and 1 number'
     const emailInUse = 'E-mail in use'
 
@@ -126,12 +126,12 @@ describe('Integration Tests', () => {
       ${'email'}    | ${'user@mail'}     | ${emailInvalid}
       ${'password'} | ${null}            | ${passwordNull}
       ${'password'} | ${'P4ssw'}         | ${passwordSize}
-      ${'password'} | ${'alllowercase'}  | ${password_pattern}
-      ${'password'} | ${'ALLUPPERCASE'}  | ${password_pattern}
-      ${'password'} | ${'123456789'}     | ${password_pattern}
-      ${'password'} | ${'lowerUPPER'}    | ${password_pattern}
-      ${'password'} | ${'lower123456'}   | ${password_pattern}
-      ${'password'} | ${'UPPER123456'}   | ${password_pattern}
+      ${'password'} | ${'alllowercase'}  | ${passwordPattern}
+      ${'password'} | ${'ALLUPPERCASE'}  | ${passwordPattern}
+      ${'password'} | ${'123456789'}     | ${passwordPattern}
+      ${'password'} | ${'lowerUPPER'}    | ${passwordPattern}
+      ${'password'} | ${'lower123456'}   | ${passwordPattern}
+      ${'password'} | ${'UPPER123456'}   | ${passwordPattern}
     `(
       'returns $expectedMessage when $field is $value',
       async ({ field, expectedMessage, value }) => {
@@ -186,7 +186,7 @@ describe('Integration Tests', () => {
     const emailInvalid = 'อีเมลไม่ถูกต้อง'
     const passwordNull = 'กรุณาใส่ Password'
     const passwordSize = 'Password ต้องมีอย่างต่ำ 6 ตัว'
-    const password_pattern =
+    const passwordPattern =
       'Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข'
     const emailInUse = 'อีเอลนี้ถูกใช้แล้ว'
 
@@ -201,12 +201,12 @@ describe('Integration Tests', () => {
       ${'email'}    | ${'user@mail'}     | ${emailInvalid}
       ${'password'} | ${null}            | ${passwordNull}
       ${'password'} | ${'P4ssw'}         | ${passwordSize}
-      ${'password'} | ${'alllowercase'}  | ${password_pattern}
-      ${'password'} | ${'ALLUPPERCASE'}  | ${password_pattern}
-      ${'password'} | ${'123456789'}     | ${password_pattern}
-      ${'password'} | ${'lowerUPPER'}    | ${password_pattern}
-      ${'password'} | ${'lower123456'}   | ${password_pattern}
-      ${'password'} | ${'UPPER123456'}   | ${password_pattern}
+      ${'password'} | ${'alllowercase'}  | ${passwordPattern}
+      ${'password'} | ${'ALLUPPERCASE'}  | ${passwordPattern}
+      ${'password'} | ${'123456789'}     | ${passwordPattern}
+      ${'password'} | ${'lowerUPPER'}    | ${passwordPattern}
+      ${'password'} | ${'lower123456'}   | ${passwordPattern}
+      ${'password'} | ${'UPPER123456'}   | ${passwordPattern}
     `(
       'returns $expectedMessage when $field is $value when language is set as Thai',
       async ({ field, expectedMessage, value }) => {

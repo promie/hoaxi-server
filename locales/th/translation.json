@@ -1,0 +1,10 @@
+{
+  "usernameNull": "กรุณาใส่ Username",
+  "usernameSize": "Username ต้องมีอย่างต่ำ 4 และมากสุด 32 ตัว",
+  "emailNull": "กรุณาใส่อีเมล",
+  "emailInvalid": "อีเมลไม่ถูกต้อง",
+  "passwordNull": "กรุณาใส่ Password",
+  "passwordSize": "Password ต้องมีอย่างต่ำ 6 ตัว",
+  "passwordPattern": "Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข",
+  "emailInUse": "อีเอลนี้ถูกใช้แล้ว"
+}
