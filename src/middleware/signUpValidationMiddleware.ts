@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { Request, Response, NextFunction } from 'express'
 import httpStatus from 'http-status'
-import { check, validationResult } from 'express-validator'
+import { validationResult } from 'express-validator'
 
 const signUpValidationMiddleware = (
   req: Request,
@@ -12,8 +13,9 @@ const signUpValidationMiddleware = (
   if (!errors.isEmpty()) {
     const validationErrors = {}
 
-    // @ts-ignore
-    errors.array().forEach(error => (validationErrors[error.param] = error.msg))
+    errors
+      .array()
+      .forEach(error => (validationErrors[error.param] = req.t(error.msg)))
 
     return res.status(httpStatus.BAD_REQUEST).send({ validationErrors })
   }
