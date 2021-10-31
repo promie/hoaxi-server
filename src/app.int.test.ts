@@ -23,8 +23,16 @@ const validUser = {
   password: 'P4ssword',
 }
 
-const postUser = (user: UserType = validUser) => {
-  return request(app).post('/api/1.0/users').send(user)
+const postUser = (user: UserType = validUser, options = {}) => {
+  const agent = request(app).post('/api/1.0/users')
+
+  // @ts-ignore
+  if (options.language) {
+    // @ts-ignore
+    agent.set('Accept-Language', options.language)
+  }
+
+  return agent.send(user)
 }
 
 describe('Integration Tests', () => {
@@ -173,13 +181,6 @@ describe('Integration Tests', () => {
   })
 
   describe('Internationalisation', () => {
-    const postUser = (user: UserType = validUser) => {
-      return request(app)
-        .post('/api/1.0/users')
-        .set('Accept-Language', 'th')
-        .send(user)
-    }
-
     const usernameNull = 'กรุณาใส่ Username'
     const usernameSize = 'Username ต้องมีอย่างต่ำ 4 และมากสุด 32 ตัว'
     const emailNull = 'กรุณาใส่อีเมล'
@@ -218,7 +219,7 @@ describe('Integration Tests', () => {
 
         // @ts-ignore
         user[field] = value
-        const response = await postUser(user)
+        const response = await postUser(user, { language: 'th' })
         const body = response.body
         expect(body.validationErrors[field]).toBe(expectedMessage)
       },
@@ -227,7 +228,7 @@ describe('Integration Tests', () => {
     it(`returns ${emailInUse} when same email is already in use when language is set as Thai`, async () => {
       await User.create({ ...validUser })
 
-      const response = await postUser()
+      const response = await postUser({ ...validUser }, { language: 'th' })
 
       expect(response.body.validationErrors.email).toBe(emailInUse)
     })
