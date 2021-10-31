@@ -3,10 +3,13 @@ import { IUser } from '../types/user'
 import bcrypt from 'bcrypt'
 
 const signUp = async (userDetails: IUser) => {
-  const hashedPassword = await bcrypt.hash(userDetails.password, 10)
+  const { username, email, password } = userDetails
+
+  const hashedPassword = await bcrypt.hash(password, 10)
 
   const user = {
-    ...userDetails,
+    username,
+    email,
     password: hashedPassword,
   }
 
