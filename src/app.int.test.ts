@@ -2,6 +2,7 @@ import request from 'supertest'
 import app from './app'
 import { User } from './models'
 import sequelize from './config/database'
+const nodemailerStub = require('nodemailer-stub')
 
 type UserType = {
   email: string | null
@@ -206,6 +207,19 @@ describe('Integration Tests', () => {
 
       // @ts-ignore
       expect(savedUser.activationToken).toBeTruthy()
+    })
+
+    it('sends an Account activation email with activationToken', async () => {
+      await postUser()
+
+      const lastMail = nodemailerStub.interactsWithMail.lastMail()
+
+      const users = await User.findAll()
+      const savedUser = users[0]
+
+      expect(lastMail.to[0]).toBe('user1@mail.com')
+      // @ts-ignore
+      expect(lastMail.content).toContain(savedUser.activationToken)
     })
   })
 
