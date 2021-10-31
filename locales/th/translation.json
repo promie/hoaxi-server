@@ -6,5 +6,6 @@
   "passwordNull": "กรุณาใส่ Password",
   "passwordSize": "Password ต้องมีอย่างต่ำ 6 ตัว",
   "passwordPattern": "Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข",
-  "emailInUse": "อีเอลนี้ถูกใช้แล้ว"
+  "emailInUse": "อีเอลนี้ถูกใช้แล้ว",
+  "userCreateSuccess": "User ได้ถูกสร้างเรียบร้อยแล้ว"
 }

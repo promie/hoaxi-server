@@ -6,7 +6,7 @@ const signUp = async (req: Request, res: Response, _next: NextFunction) => {
   await UserService.signUp(req.body)
 
   return res.status(httpStatus.OK).json({
-    message: 'User created',
+    message: req.t('userCreateSuccess'),
   })
 }
 

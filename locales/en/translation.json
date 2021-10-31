@@ -6,5 +6,6 @@
   "passwordNull": "Password cannot be null",
   "passwordSize": "Password must be at least 6 characters",
   "passwordPattern": "Password must have at least 1 uppercase, 1 lowercase letter and 1 number",
-  "emailInUse": "E-mail in use"
+  "emailInUse": "E-mail in use",
+  "userCreateSuccess": "User created"
 }

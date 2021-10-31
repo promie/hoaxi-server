@@ -190,6 +190,7 @@ describe('Integration Tests', () => {
     const passwordPattern =
       'Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข'
     const emailInUse = 'อีเอลนี้ถูกใช้แล้ว'
+    const userCreateSuccess = 'User ได้ถูกสร้างเรียบร้อยแล้ว'
 
     it.each`
       field         | value              | expectedMessage
@@ -231,6 +232,12 @@ describe('Integration Tests', () => {
       const response = await postUser({ ...validUser }, { language: 'th' })
 
       expect(response.body.validationErrors.email).toBe(emailInUse)
+    })
+
+    it(`returns success message of ${userCreateSuccess} when signup request is valid when language is set as Thai`, async () => {
+      const response = await postUser({ ...validUser }, { language: 'th' })
+
+      expect(response.body.message).toBe(userCreateSuccess)
     })
   })
 })
