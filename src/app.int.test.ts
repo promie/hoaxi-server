@@ -198,6 +198,15 @@ describe('Integration Tests', () => {
       // @ts-ignore
       expect(savedUser.inactive).toBe(true)
     })
+
+    it('creates an activationToken for user', async () => {
+      await postUser()
+      const users = await User.findAll()
+      const savedUser = users[0]
+
+      // @ts-ignore
+      expect(savedUser.activationToken).toBeTruthy()
+    })
   })
 
   describe('Internationalisation', () => {
