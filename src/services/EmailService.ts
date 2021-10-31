@@ -1,7 +1,4 @@
-import nodemailer from 'nodemailer'
-const nodemailerStub = require('nodemailer-stub')
-
-const transporter = nodemailer.createTransport(nodemailerStub.stubTransport)
+import transporter from '../config/emailTransporter'
 
 const sendAccountActivation = async (email: string, token: string) => {
   await transporter.sendMail({
