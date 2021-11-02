@@ -232,8 +232,18 @@ describe('Integration Tests', () => {
       const response = await postUser()
 
       expect(response.status).toBe(httpStatus.BAD_GATEWAY)
+      mockSendAccountActivation.mockRestore()
+    })
+
+    it('returns Email failure message when sending email fails', async () => {
+      const mockSendAccountActivation = jest
+        .spyOn(EmailService, 'sendAccountActivation')
+        .mockRejectedValue({ message: 'Failed to deliver email' })
+
+      const response = await postUser()
 
       mockSendAccountActivation.mockRestore()
+      expect(response.body.message).toBe('E-mail Failure')
     })
   })
 
@@ -248,6 +258,7 @@ describe('Integration Tests', () => {
       'Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข'
     const emailInUse = 'อีเอลนี้ถูกใช้แล้ว'
     const userCreateSuccess = 'User ได้ถูกสร้างเรียบร้อยแล้ว'
+    const emailFailure = 'มีปัญหาส่ง E-mail'
 
     it.each`
       field         | value              | expectedMessage
@@ -295,6 +306,17 @@ describe('Integration Tests', () => {
       const response = await postUser({ ...validUser }, { language: 'th' })
 
       expect(response.body.message).toBe(userCreateSuccess)
+    })
+
+    it(`returns ${emailFailure} message when sending email fails when language is set as Thai`, async () => {
+      const mockSendAccountActivation = jest
+        .spyOn(EmailService, 'sendAccountActivation')
+        .mockRejectedValue({ message: 'Failed to deliver email' })
+
+      const response = await postUser({ ...validUser }, { language: 'th' })
+
+      mockSendAccountActivation.mockRestore()
+      expect(response.body.message).toBe(emailFailure)
     })
   })
 })

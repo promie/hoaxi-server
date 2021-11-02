@@ -10,7 +10,9 @@ const signUp = async (req: Request, res: Response, _next: NextFunction) => {
       message: req.t('userCreateSuccess'),
     })
   } catch (err) {
-    return res.status(httpStatus.BAD_GATEWAY).send()
+    return res
+      .status(httpStatus.BAD_GATEWAY)
+      .send({ message: req.t('emailFailure') })
   }
 }
 
