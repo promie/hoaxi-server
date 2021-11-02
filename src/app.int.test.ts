@@ -2,6 +2,8 @@ import request from 'supertest'
 import app from './app'
 import { User } from './models'
 import sequelize from './config/database'
+import httpStatus from 'http-status'
+import { EmailService } from './services'
 const nodemailerStub = require('nodemailer-stub')
 
 type UserType = {
@@ -220,6 +222,16 @@ describe('Integration Tests', () => {
       expect(lastMail.to[0]).toBe('user1@mail.com')
       // @ts-ignore
       expect(lastMail.content).toContain(savedUser.activationToken)
+    })
+
+    it('returns 502 Bad Gateway when sending email fails', async () => {
+      jest
+        .spyOn(EmailService, 'sendAccountActivation')
+        .mockRejectedValue({ message: 'Failed to deliver email' })
+
+      const response = await postUser()
+
+      expect(response.status).toBe(httpStatus.BAD_GATEWAY)
     })
   })
 
