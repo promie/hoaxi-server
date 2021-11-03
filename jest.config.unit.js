@@ -6,4 +6,8 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js'],
   testEnvironment: 'node',
+  watchPlugins: [
+    'jest-watch-typeahead/filename',
+    'jest-watch-typeahead/testname',
+  ],
 }
