@@ -3,6 +3,7 @@ import { IUser } from '../types/user'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { EmailService } from './index'
+import sequelize from '../config/database'
 
 const generateToken = (length: number): string => {
   return crypto.randomBytes(length).toString('hex').substring(0, length)
@@ -21,9 +22,18 @@ const signUp = async (userDetails: IUser) => {
     activationToken: token,
   }
 
-  const newUser = await UserRepository.signUp(user)
+  const transaction = await sequelize.transaction()
 
-  await EmailService.sendAccountActivation(email, token)
+  const newUser = await UserRepository.signUp(user, transaction)
+
+  try {
+    await EmailService.sendAccountActivation(email, token)
+    await transaction.commit()
+  } catch (err) {
+    await transaction.rollback()
+    // @ts-ignore
+    throw new Error(err)
+  }
 
   return newUser
 }
