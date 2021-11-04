@@ -13,6 +13,7 @@ type UserType = {
 }
 
 let lastMail: string, server: any
+let simulateSmtpFailure = false
 
 beforeAll(async () => {
   // @ts-ignore
@@ -25,6 +26,14 @@ beforeAll(async () => {
         mailBody += data
       })
       stream.on('end', () => {
+        if (simulateSmtpFailure) {
+          const err = new Error('invalid mailbox')
+          // @ts-ignore
+          err.responseCode = 553
+
+          return callback(err)
+        }
+
         lastMail = mailBody
         callback()
       })
@@ -37,6 +46,7 @@ beforeAll(async () => {
 })
 
 beforeEach(() => {
+  simulateSmtpFailure = false
   return User.destroy({ truncate: true })
 })
 
@@ -247,34 +257,23 @@ describe('Integration Tests', () => {
     })
 
     it('returns 502 Bad Gateway when sending email fails', async () => {
-      const mockSendAccountActivation = jest
-        .spyOn(EmailService, 'sendAccountActivation')
-        .mockRejectedValue({ message: 'Failed to deliver email' })
+      simulateSmtpFailure = true
 
       const response = await postUser()
 
       expect(response.status).toBe(httpStatus.BAD_GATEWAY)
-      mockSendAccountActivation.mockRestore()
     })
 
     it('returns Email failure message when sending email fails', async () => {
-      const mockSendAccountActivation = jest
-        .spyOn(EmailService, 'sendAccountActivation')
-        .mockRejectedValue({ message: 'Failed to deliver email' })
-
+      simulateSmtpFailure = true
       const response = await postUser()
 
-      mockSendAccountActivation.mockRestore()
       expect(response.body.message).toBe('E-mail Failure')
     })
 
     it('does not save user to database if activation email fails', async () => {
-      const mockSendAccountActivation = jest
-        .spyOn(EmailService, 'sendAccountActivation')
-        .mockRejectedValue({ message: 'Failed to deliver email' })
-
+      simulateSmtpFailure = true
       await postUser()
-      mockSendAccountActivation.mockRestore()
 
       const users = await User.findAll()
       expect(users.length).toBe(0)
@@ -343,13 +342,10 @@ describe('Integration Tests', () => {
     })
 
     it(`returns ${emailFailure} message when sending email fails when language is set as Thai`, async () => {
-      const mockSendAccountActivation = jest
-        .spyOn(EmailService, 'sendAccountActivation')
-        .mockRejectedValue({ message: 'Failed to deliver email' })
+      simulateSmtpFailure = true
 
       const response = await postUser({ ...validUser }, { language: 'th' })
 
-      mockSendAccountActivation.mockRestore()
       expect(response.body.message).toBe(emailFailure)
     })
   })
