@@ -4,7 +4,7 @@ import { User } from './models'
 import sequelize from './config/database'
 import httpStatus from 'http-status'
 import { EmailService } from './services'
-const nodemailerStub = require('nodemailer-stub')
+const SMTPServer = require('smtp-server').SMTPServer
 
 type UserType = {
   email: string | null
@@ -212,16 +212,36 @@ describe('Integration Tests', () => {
     })
 
     it('sends an Account activation email with activationToken', async () => {
+      let lastMail
+
+      // @ts-ignore
+      const server = new SMTPServer({
+        authOptional: true,
+        onData(stream: any, session: any, callback: any) {
+          let mailBody: string
+
+          stream.on('data', (data: any) => {
+            mailBody += data
+          })
+          stream.on('end', () => {
+            lastMail = mailBody
+            callback()
+          })
+        },
+      })
+
+      await server.listen(8587, 'localhost')
+
       await postUser()
 
-      const lastMail = nodemailerStub.interactsWithMail.lastMail()
+      await server.close()
 
       const users = await User.findAll()
       const savedUser = users[0]
 
-      expect(lastMail.to[0]).toBe('user1@mail.com')
+      expect(lastMail).toContain('user1@mail.com')
       // @ts-ignore
-      expect(lastMail.content).toContain(savedUser.activationToken)
+      expect(lastMail).toContain(savedUser.activationToken)
     })
 
     it('returns 502 Bad Gateway when sending email fails', async () => {
