@@ -3,7 +3,6 @@ import app from './app'
 import { User } from './models'
 import sequelize from './config/database'
 import httpStatus from 'http-status'
-import { EmailService } from './services'
 const SMTPServer = require('smtp-server').SMTPServer
 
 type UserType = {

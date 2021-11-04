@@ -65,7 +65,6 @@
     "http-status": "^1.5.0",
     "jest": "^27.2.5",
     "jest-watch-typeahead": "^1.0.0",
-    "nodemailer-stub": "^1.2.2",
     "prettier": "^2.4.1",
     "smtp-server": "^3.9.0",
     "supertest": "^6.1.6",
