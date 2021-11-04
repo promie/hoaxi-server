@@ -12,12 +12,36 @@ type UserType = {
   username: string | null
 }
 
-beforeAll(() => {
+let lastMail: string, server: any
+
+beforeAll(async () => {
+  // @ts-ignore
+  server = new SMTPServer({
+    authOptional: true,
+    onData(stream: any, session: any, callback: any) {
+      let mailBody: string
+
+      stream.on('data', (data: any) => {
+        mailBody += data
+      })
+      stream.on('end', () => {
+        lastMail = mailBody
+        callback()
+      })
+    },
+  })
+
+  await server.listen(8587, 'localhost')
+
   return sequelize.sync()
 })
 
 beforeEach(() => {
   return User.destroy({ truncate: true })
+})
+
+afterAll(async () => {
+  await server.close()
 })
 
 const validUser = {
@@ -212,29 +236,7 @@ describe('Integration Tests', () => {
     })
 
     it('sends an Account activation email with activationToken', async () => {
-      let lastMail
-
-      // @ts-ignore
-      const server = new SMTPServer({
-        authOptional: true,
-        onData(stream: any, session: any, callback: any) {
-          let mailBody: string
-
-          stream.on('data', (data: any) => {
-            mailBody += data
-          })
-          stream.on('end', () => {
-            lastMail = mailBody
-            callback()
-          })
-        },
-      })
-
-      await server.listen(8587, 'localhost')
-
       await postUser()
-
-      await server.close()
 
       const users = await User.findAll()
       const savedUser = users[0]
