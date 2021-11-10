@@ -18,6 +18,8 @@ const activate = async (token: string) => {
 
   // @ts-ignore
   user.inactive = false
+  // @ts-ignore
+  user.activationToken = null
 
   // @ts-ignore
   await user.save()
