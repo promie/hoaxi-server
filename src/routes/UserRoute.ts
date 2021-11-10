@@ -41,4 +41,6 @@ router.post(
   UserController.signUp,
 )
 
+router.post('/token/:activationToken', UserController.activate)
+
 export default router

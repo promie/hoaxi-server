@@ -13,7 +13,18 @@ const findByEmail = (email: string) => {
   return User.findOne({ where: { email } })
 }
 
+const activate = async (token: string) => {
+  const user = await User.findOne({ where: { activationToken: token } })
+
+  // @ts-ignore
+  user.inactive = false
+
+  // @ts-ignore
+  await user.save()
+}
+
 export default {
+  activate,
   signUp,
   findByEmail,
 }

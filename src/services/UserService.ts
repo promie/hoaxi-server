@@ -43,7 +43,12 @@ const findByEmail = (email: string) => {
   return UserRepository.findByEmail(email)
 }
 
+const activate = (token: string) => {
+  return UserRepository.activate(token)
+}
+
 export default {
+  activate,
   signUp,
   findByEmail,
 }
