@@ -377,25 +377,5 @@ describe('Integration Tests', () => {
       // @ts-ignore
       expect(users[0].activationToken).toBeFalsy()
     })
-
-    it('does not activate the account when token is wrong', async () => {
-      await postUser()
-      const token = 'this-token-does-not-exist'
-
-      await request(app).post(`/api/1.0/users/token/${token}`)
-      const users = await User.findAll()
-
-      // @ts-ignore
-      expect(users[0].inactive).toBe(true)
-    })
-
-    it('returns bad request when token is wrong', async () => {
-      await postUser()
-
-      const token = 'this-token-does-not-exist'
-      const response = await request(app).post(`/api/1.0/users/token/${token}`)
-
-      expect(response.status).toBe(400)
-    })
   })
 })
