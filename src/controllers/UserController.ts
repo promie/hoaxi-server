@@ -24,7 +24,9 @@ const activate = async (req: Request, res: Response, _next: NextFunction) => {
 
   try {
     await UserService.activate(token)
-  } catch (err) {}
+  } catch (err) {
+    return res.status(400)
+  }
 
   res.send()
 }
