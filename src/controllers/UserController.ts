@@ -22,7 +22,9 @@ const signUp = async (req: Request, res: Response, _next: NextFunction) => {
 const activate = async (req: Request, res: Response, _next: NextFunction) => {
   const token = req.params.activationToken
 
-  await UserService.activate(token)
+  try {
+    await UserService.activate(token)
+  } catch (err) {}
 
   res.send()
 }
