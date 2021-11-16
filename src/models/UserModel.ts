@@ -1,9 +1,17 @@
 import Sequelize from 'sequelize'
 import sequelize from '../config/database'
 
+interface IUser {
+  username: string
+  email: string
+  password: string
+  inactive?: string
+  activationToken?: string
+}
+
 const Model = Sequelize.Model
 
-class User extends Model {}
+class User extends Model<IUser> {}
 
 User.init(
   {
