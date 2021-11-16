@@ -15,7 +15,6 @@ let lastMail: string, server: any
 let simulateSmtpFailure = false
 
 beforeAll(async () => {
-  // @ts-ignore
   server = new SMTPServer({
     authOptional: true,
     onData(stream: any, session: any, callback: any) {
@@ -26,8 +25,7 @@ beforeAll(async () => {
       })
       stream.on('end', () => {
         if (simulateSmtpFailure) {
-          const err = new Error('invalid mailbox')
-          // @ts-ignore
+          const err: any = new Error('invalid mailbox')
           err.responseCode = 553
 
           return callback(err)
@@ -59,12 +57,10 @@ const validUser = {
   password: 'P4ssword',
 }
 
-const postUser = (user: UserType = validUser, options = {}) => {
+const postUser = (user: UserType = validUser, options: any = {}) => {
   const agent = request(app).post('/api/1.0/users')
 
-  // @ts-ignore
   if (options.language) {
-    // @ts-ignore
     agent.set('Accept-Language', options.language)
   }
 
@@ -97,11 +93,9 @@ describe('Integration Tests', () => {
       await postUser()
 
       const userList = await User.findAll()
-      const savedUser = userList[0]
+      const savedUser: any = userList[0]
 
-      // @ts-ignore
       expect(savedUser.username).toBe('user1')
-      // @ts-ignore
       expect(savedUser.email).toBe('user1@mail.com')
     })
 
@@ -109,9 +103,8 @@ describe('Integration Tests', () => {
       await postUser()
 
       const userList = await User.findAll()
-      const savedUser = userList[0]
+      const savedUser: any = userList[0]
 
-      // @ts-ignore
       expect(savedUser.password).not.toBe('P4ssword')
     })
 
@@ -179,13 +172,12 @@ describe('Integration Tests', () => {
     `(
       'returns $expectedMessage when $field is $value',
       async ({ field, expectedMessage, value }) => {
-        const user = {
+        const user: any = {
           username: 'user1',
           email: 'user1@mail.com',
           password: 'P4ssword',
         }
 
-        // @ts-ignore
         user[field] = value
         const response = await postUser(user)
         const body = response.body
@@ -218,9 +210,8 @@ describe('Integration Tests', () => {
     it('creates user in inactive mode', async () => {
       await postUser()
       const users = await User.findAll()
-      const savedUser = users[0]
+      const savedUser: any = users[0]
 
-      // @ts-ignore
       expect(savedUser.inactive).toBe(true)
     })
 
@@ -229,18 +220,16 @@ describe('Integration Tests', () => {
 
       await postUser(newUser)
       const users = await User.findAll()
-      const savedUser = users[0]
+      const savedUser: any = users[0]
 
-      // @ts-ignore
       expect(savedUser.inactive).toBe(true)
     })
 
     it('creates an activationToken for user', async () => {
       await postUser()
       const users = await User.findAll()
-      const savedUser = users[0]
+      const savedUser: any = users[0]
 
-      // @ts-ignore
       expect(savedUser.activationToken).toBeTruthy()
     })
 
@@ -248,10 +237,9 @@ describe('Integration Tests', () => {
       await postUser()
 
       const users = await User.findAll()
-      const savedUser = users[0]
+      const savedUser: any = users[0]
 
       expect(lastMail).toContain('user1@mail.com')
-      // @ts-ignore
       expect(lastMail).toContain(savedUser.activationToken)
     })
 
@@ -312,13 +300,12 @@ describe('Integration Tests', () => {
     `(
       'returns $expectedMessage when $field is $value when language is set as Thai',
       async ({ field, expectedMessage, value }) => {
-        const user = {
+        const user: any = {
           username: 'user1',
           email: 'user1@mail.com',
           password: 'P4ssword',
         }
 
-        // @ts-ignore
         user[field] = value
         const response = await postUser(user, { language: 'th' })
         const body = response.body
@@ -353,28 +340,23 @@ describe('Integration Tests', () => {
     it('activates the account when correct token is sent', async () => {
       await postUser()
 
-      let users = await User.findAll()
-      // @ts-ignore
+      let users: any = await User.findAll()
       const token = users[0].activationToken
 
       await request(app).post(`/api/1.0/users/token/${token}`)
       users = await User.findAll()
 
-      // @ts-ignore
       expect(users[0].inactive).toBe(false)
     })
 
     it('removes the token from user table after successful activation', async () => {
       await postUser()
 
-      let users = await User.findAll()
-      // @ts-ignore
+      let users: any = await User.findAll()
       const token = users[0].activationToken
 
       await request(app).post(`/api/1.0/users/token/${token}`)
       users = await User.findAll()
-
-      // @ts-ignore
       expect(users[0].activationToken).toBeFalsy()
     })
   })
