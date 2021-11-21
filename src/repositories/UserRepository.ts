@@ -15,19 +15,16 @@ const findByEmail = (email: string) => {
 }
 
 const activate = async (token: string) => {
-  const user = await User.findOne({ where: { activationToken: token } })
+  const user: any = await User.findOne({ where: { activationToken: token } })
 
   if (!user) {
     // @ts-ignore
     throw new InvalidTokenException()
   }
 
-  // @ts-ignore
   user.inactive = false
-  // @ts-ignore
   user.activationToken = null
 
-  // @ts-ignore
   await user.save()
 }
 
