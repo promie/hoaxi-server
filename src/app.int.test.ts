@@ -265,99 +265,99 @@ describe('Integration Tests', () => {
       const users = await User.findAll()
       expect(users.length).toBe(0)
     })
-  })
 
-  describe('Internationalisation', () => {
-    const usernameNull = 'กรุณาใส่ Username'
-    const usernameSize = 'Username ต้องมีอย่างต่ำ 4 และมากสุด 32 ตัว'
-    const emailNull = 'กรุณาใส่อีเมล'
-    const emailInvalid = 'อีเมลไม่ถูกต้อง'
-    const passwordNull = 'กรุณาใส่ Password'
-    const passwordSize = 'Password ต้องมีอย่างต่ำ 6 ตัว'
-    const passwordPattern =
-      'Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข'
-    const emailInUse = 'อีเอลนี้ถูกใช้แล้ว'
-    const userCreateSuccess = 'User ได้ถูกสร้างเรียบร้อยแล้ว'
-    const emailFailure = 'มีปัญหาส่ง E-mail'
+    describe('Internationalisation', () => {
+      const usernameNull = 'กรุณาใส่ Username'
+      const usernameSize = 'Username ต้องมีอย่างต่ำ 4 และมากสุด 32 ตัว'
+      const emailNull = 'กรุณาใส่อีเมล'
+      const emailInvalid = 'อีเมลไม่ถูกต้อง'
+      const passwordNull = 'กรุณาใส่ Password'
+      const passwordSize = 'Password ต้องมีอย่างต่ำ 6 ตัว'
+      const passwordPattern =
+        'Password อย่างต่ำต้องมี 1 ตัวใหญ่, 1 ตัวเล็ก และ 1 ตัวเลข'
+      const emailInUse = 'อีเอลนี้ถูกใช้แล้ว'
+      const userCreateSuccess = 'User ได้ถูกสร้างเรียบร้อยแล้ว'
+      const emailFailure = 'มีปัญหาส่ง E-mail'
 
-    it.each`
-      field         | value              | expectedMessage
-      ${'username'} | ${null}            | ${usernameNull}
-      ${'username'} | ${'usr'}           | ${usernameSize}
-      ${'username'} | ${'a'.repeat(33)}  | ${usernameSize}
-      ${'email'}    | ${null}            | ${emailNull}
-      ${'email'}    | ${'mail.com'}      | ${emailInvalid}
-      ${'email'}    | ${'user.mail.com'} | ${emailInvalid}
-      ${'email'}    | ${'user@mail'}     | ${emailInvalid}
-      ${'password'} | ${null}            | ${passwordNull}
-      ${'password'} | ${'P4ssw'}         | ${passwordSize}
-      ${'password'} | ${'alllowercase'}  | ${passwordPattern}
-      ${'password'} | ${'ALLUPPERCASE'}  | ${passwordPattern}
-      ${'password'} | ${'123456789'}     | ${passwordPattern}
-      ${'password'} | ${'lowerUPPER'}    | ${passwordPattern}
-      ${'password'} | ${'lower123456'}   | ${passwordPattern}
-      ${'password'} | ${'UPPER123456'}   | ${passwordPattern}
-    `(
-      'returns $expectedMessage when $field is $value when language is set as Thai',
-      async ({ field, expectedMessage, value }) => {
-        const user: any = {
-          username: 'user1',
-          email: 'user1@mail.com',
-          password: 'P4ssword',
-        }
+      it.each`
+        field         | value              | expectedMessage
+        ${'username'} | ${null}            | ${usernameNull}
+        ${'username'} | ${'usr'}           | ${usernameSize}
+        ${'username'} | ${'a'.repeat(33)}  | ${usernameSize}
+        ${'email'}    | ${null}            | ${emailNull}
+        ${'email'}    | ${'mail.com'}      | ${emailInvalid}
+        ${'email'}    | ${'user.mail.com'} | ${emailInvalid}
+        ${'email'}    | ${'user@mail'}     | ${emailInvalid}
+        ${'password'} | ${null}            | ${passwordNull}
+        ${'password'} | ${'P4ssw'}         | ${passwordSize}
+        ${'password'} | ${'alllowercase'}  | ${passwordPattern}
+        ${'password'} | ${'ALLUPPERCASE'}  | ${passwordPattern}
+        ${'password'} | ${'123456789'}     | ${passwordPattern}
+        ${'password'} | ${'lowerUPPER'}    | ${passwordPattern}
+        ${'password'} | ${'lower123456'}   | ${passwordPattern}
+        ${'password'} | ${'UPPER123456'}   | ${passwordPattern}
+      `(
+        'returns $expectedMessage when $field is $value when language is set as Thai',
+        async ({ field, expectedMessage, value }) => {
+          const user: any = {
+            username: 'user1',
+            email: 'user1@mail.com',
+            password: 'P4ssword',
+          }
 
-        user[field] = value
-        const response = await postUser(user, { language: 'th' })
-        const body = response.body
-        expect(body.validationErrors[field]).toBe(expectedMessage)
-      },
-    )
+          user[field] = value
+          const response = await postUser(user, { language: 'th' })
+          const body = response.body
+          expect(body.validationErrors[field]).toBe(expectedMessage)
+        },
+      )
 
-    it(`returns ${emailInUse} when same email is already in use when language is set as Thai`, async () => {
-      await User.create({ ...validUser })
+      it(`returns ${emailInUse} when same email is already in use when language is set as Thai`, async () => {
+        await User.create({ ...validUser })
 
-      const response = await postUser({ ...validUser }, { language: 'th' })
+        const response = await postUser({ ...validUser }, { language: 'th' })
 
-      expect(response.body.validationErrors.email).toBe(emailInUse)
+        expect(response.body.validationErrors.email).toBe(emailInUse)
+      })
+
+      it(`returns success message of ${userCreateSuccess} when signup request is valid when language is set as Thai`, async () => {
+        const response = await postUser({ ...validUser }, { language: 'th' })
+
+        expect(response.body.message).toBe(userCreateSuccess)
+      })
+
+      it(`returns ${emailFailure} message when sending email fails when language is set as Thai`, async () => {
+        simulateSmtpFailure = true
+
+        const response = await postUser({ ...validUser }, { language: 'th' })
+
+        expect(response.body.message).toBe(emailFailure)
+      })
     })
 
-    it(`returns success message of ${userCreateSuccess} when signup request is valid when language is set as Thai`, async () => {
-      const response = await postUser({ ...validUser }, { language: 'th' })
+    describe('Account activation', () => {
+      it('activates the account when correct token is sent', async () => {
+        await postUser()
 
-      expect(response.body.message).toBe(userCreateSuccess)
-    })
+        let users: any = await User.findAll()
+        const token = users[0].activationToken
 
-    it(`returns ${emailFailure} message when sending email fails when language is set as Thai`, async () => {
-      simulateSmtpFailure = true
+        await request(app).post(`/api/1.0/users/token/${token}`).send()
+        users = await User.findAll()
 
-      const response = await postUser({ ...validUser }, { language: 'th' })
+        expect(users[0].inactive).toBe(false)
+      })
 
-      expect(response.body.message).toBe(emailFailure)
-    })
-  })
+      it('removes the token from user table after successful activation', async () => {
+        await postUser()
 
-  describe('Account activation', () => {
-    it('activates the account when correct token is sent', async () => {
-      await postUser()
+        let users: any = await User.findAll()
+        const token = users[0].activationToken
 
-      let users: any = await User.findAll()
-      const token = users[0].activationToken
-
-      await request(app).post(`/api/1.0/users/token/${token}`).send()
-      users = await User.findAll()
-
-      expect(users[0].inactive).toBe(false)
-    })
-
-    it('removes the token from user table after successful activation', async () => {
-      await postUser()
-
-      let users: any = await User.findAll()
-      const token = users[0].activationToken
-
-      await request(app).post(`/api/1.0/users/token/${token}`).send()
-      users = await User.findAll()
-      expect(users[0].activationToken).toBeFalsy()
+        await request(app).post(`/api/1.0/users/token/${token}`).send()
+        users = await User.findAll()
+        expect(users[0].activationToken).toBeFalsy()
+      })
     })
   })
 
@@ -366,6 +366,17 @@ describe('Integration Tests', () => {
       const response = await request(app).get('/api/1.0/users')
 
       expect(response.status).toBe(200)
+    })
+
+    it('returns page object as response body', async () => {
+      const response = await request(app).get('/api/1.0/users')
+
+      expect(response.body).toEqual({
+        content: [],
+        page: 0,
+        size: 10,
+        totalPages: 0,
+      })
     })
   })
 })

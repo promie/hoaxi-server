@@ -48,7 +48,12 @@ const activate = (token: string) => {
 }
 
 const getUsers = () => {
-  return UserRepository.getUsers()
+  return {
+    content: [],
+    page: 0,
+    size: 10,
+    totalPages: 0,
+  }
 }
 
 export default {
