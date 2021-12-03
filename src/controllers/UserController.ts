@@ -24,7 +24,15 @@ const activate = async (req: Request, res: Response, _next: NextFunction) => {
 
   res.send()
 }
+
+const getUsers = async (req: Request, res: Response, _next: NextFunction) => {
+  const users = await UserService.getUsers()
+
+  return res.status(200).send(users)
+}
+
 export default {
   activate,
   signUp,
+  getUsers,
 }

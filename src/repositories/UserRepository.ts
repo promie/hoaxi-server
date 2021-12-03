@@ -22,8 +22,13 @@ const activate = async (token: string) => {
   await user.save()
 }
 
+const getUsers = () => {
+  return User.findAll({})
+}
+
 export default {
   activate,
   signUp,
   findByEmail,
+  getUsers,
 }

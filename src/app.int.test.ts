@@ -360,4 +360,12 @@ describe('Integration Tests', () => {
       expect(users[0].activationToken).toBeFalsy()
     })
   })
+
+  describe('Listing Users', () => {
+    it('returns 200 ok when they are no user in the database', async () => {
+      const response = await request(app).get('/api/1.0/users')
+
+      expect(response.status).toBe(200)
+    })
+  })
 })

@@ -6,7 +6,7 @@ import Backend from 'i18next-fs-backend'
 import middleware from 'i18next-http-middleware'
 import { morganMiddleware } from './middleware'
 import { UserRoute } from './routes'
-import ErrorHandler from './error/ErrorHandler'
+import errorHandler from './error/ErrorHandler'
 
 i18next
   .use(Backend)
@@ -32,7 +32,7 @@ app.use(cors())
 app.use(morganMiddleware)
 
 app.use('/api/1.0/users', UserRoute)
-app.use(ErrorHandler)
+app.use(errorHandler)
 
 // Handling Unhandled Routes
 app.all('*', (req: Request, res: Response, _next: NextFunction) => {

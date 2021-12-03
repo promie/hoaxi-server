@@ -42,5 +42,6 @@ router.post(
 )
 
 router.post('/token/:activationToken', UserController.activate)
+router.get('/', UserController.getUsers)
 
 export default router

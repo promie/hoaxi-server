@@ -47,8 +47,13 @@ const activate = (token: string) => {
   return UserRepository.activate(token)
 }
 
+const getUsers = () => {
+  return UserRepository.getUsers()
+}
+
 export default {
   activate,
   signUp,
   findByEmail,
+  getUsers,
 }
