@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import httpStatus from 'http-status'
 import { UserService } from '../services'
 
-const signUp = async (req: Request, res: Response, _next: NextFunction) => {
+const signUp = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await UserService.signUp(req.body)
 
@@ -10,18 +10,12 @@ const signUp = async (req: Request, res: Response, _next: NextFunction) => {
       message: req.t('userCreateSuccess'),
     })
   } catch (err) {
-    return (
-      res
-        .status(httpStatus.BAD_GATEWAY)
-        // @ts-ignore
-        .send({ message: req.t(err.message) })
-    )
+    next(err)
   }
 }
 
 const activate = async (req: Request, res: Response, _next: NextFunction) => {
   const token = req.params.activationToken
-
   try {
     await UserService.activate(token)
   } catch (err) {

@@ -31,6 +31,11 @@ app.use(cors())
 app.use(morganMiddleware)
 
 app.use('/api/1.0/users', UserRoute)
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+  const { status, message } = err
+
+  return res.status(status).send({ message: req.t(message) })
+})
 
 // Handling Unhandled Routes
 app.all('*', (req: Request, res: Response, _next: NextFunction) => {
