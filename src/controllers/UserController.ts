@@ -19,16 +19,22 @@ const activate = async (req: Request, res: Response, _next: NextFunction) => {
   try {
     await UserService.activate(token)
   } catch (err) {
-    return res.status(400)
+    return res.status(httpStatus.BAD_REQUEST)
   }
 
   res.send()
 }
 
 const getUsers = async (req: Request, res: Response, _next: NextFunction) => {
-  const users = await UserService.getUsers()
+  let page = req.query.page ? Number.parseInt(req.query.page as string) : 0
 
-  return res.status(200).send(users)
+  if (page < 0) {
+    page = 0
+  }
+
+  const content = await UserService.getUsers(page)
+
+  return res.status(httpStatus.OK).send(content)
 }
 
 export default {

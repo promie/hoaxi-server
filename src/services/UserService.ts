@@ -47,13 +47,8 @@ const activate = (token: string) => {
   return UserRepository.activate(token)
 }
 
-const getUsers = () => {
-  return {
-    content: [],
-    page: 0,
-    size: 10,
-    totalPages: 0,
-  }
+const getUsers = (page: number) => {
+  return UserRepository.getUsers(page)
 }
 
 export default {
