@@ -1,7 +1,7 @@
 import express from 'express'
 import { UserController } from '../controllers'
 import { UserService } from '../services'
-import { signUpValidationMiddleware } from '../middleware'
+import { signUpValidationMiddleware, paginationMiddleware } from '../middleware'
 import { check } from 'express-validator'
 
 const router = express.Router()
@@ -42,6 +42,6 @@ router.post(
 )
 
 router.post('/token/:activationToken', UserController.activate)
-router.get('/', UserController.getUsers)
+router.get('/', paginationMiddleware, UserController.getUsers)
 
 export default router

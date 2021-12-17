@@ -26,13 +26,10 @@ const activate = async (req: Request, res: Response, _next: NextFunction) => {
 }
 
 const getUsers = async (req: Request, res: Response, _next: NextFunction) => {
-  let page = req.query.page ? Number.parseInt(req.query.page as string) : 0
+  // @ts-ignore
+  const { page, size } = req.pagination
 
-  if (page < 0) {
-    page = 0
-  }
-
-  const content = await UserService.getUsers(page)
+  const content = await UserService.getUsers(page, size)
 
   return res.status(httpStatus.OK).send(content)
 }
